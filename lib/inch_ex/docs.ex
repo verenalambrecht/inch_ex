@@ -56,7 +56,7 @@ defmodule InchEx.Docs do
       "name" => module_name,
       "doc" => docstring(moduledoc),
       "metadata" => metadata,
-      "location" => "#{source}:#{anno}"
+      "location" => location(source, anno)
     }
   end
 
@@ -71,7 +71,7 @@ defmodule InchEx.Docs do
       "signature" => signature,
       "doc" => docstring(doc),
       "metadata" => metadata,
-      "location" => "#{source}:#{anno}"
+      "location" => location(source, anno)
     }
   end
 
@@ -81,4 +81,7 @@ defmodule InchEx.Docs do
 
   defp private?(%{"doc" => false}), do: true
   defp private?(_), do: false
+
+  defp location(source, anno) when is_integer(anno), do: "#{source}:#{anno}"
+  defp location(source, anno), do: location(source, anno[:location])
 end

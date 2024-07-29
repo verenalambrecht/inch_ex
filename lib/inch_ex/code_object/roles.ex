@@ -115,9 +115,14 @@ defmodule InchEx.CodeObject.Roles do
   defp fun_params(%{"signature" => list}) do
     list =
       Enum.map(list, fn string ->
-        {_fun_name, _meta, parameters} = Code.string_to_quoted!(string)
+        case Code.string_to_quoted(string) do
+          {:ok, {_fun_name, _meta, parameters}} ->
+            parameters
 
-        parameters
+          {:error, _reason} ->
+            # PENDING: Handle numeric values
+            []
+        end
       end)
 
     {_, list} = Macro.prewalk(list, [], &traverse_fun_params/2)
